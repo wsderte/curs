@@ -271,7 +271,6 @@ class RedBlackTree extends Binarytree {
     } else {
       const child = new RedBlackTree(value, this.identifier, RED);
       child.parent = this;
-      //const parent = child.parent;
       this.children[dir] = child;
       child.paint();
       return child;
@@ -282,17 +281,15 @@ class RedBlackTree extends Binarytree {
 
 const rbt = new RedBlackTree();
 
-//rbt.paint(1);
-// rbt.paint(2);
-// rbt.paint(3);
-// rbt.paint(4);
 rbt.insert(7);
-
 rbt.insert(3);
 rbt.insert(2);
-
 rbt.insert(5);
-rbt.rotateRight();
+console.log("Before\n");
 console.log(rbt);
-console.log(' ');
+console.log("\n");
+rbt.rotateRight();
+console.log("After\n");
+console.log(rbt);
+console.log("\nRight:\n ");
 console.log(rbt.right);
