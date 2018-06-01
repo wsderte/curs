@@ -1,6 +1,5 @@
 'use strict';
 
-
 const identity =  i => i;
 const RIGHT = 1;
 const LEFT = 0;
@@ -60,7 +59,6 @@ class Binarytree {
     return (this.right !== undefined && this.left !== undefined);
   }
 
-
   _swapWithParent() {
     const replacement = new Binarytree(this.value, this.identifier);
     replacement.parent = this.parent;
@@ -101,7 +99,6 @@ class Binarytree {
     this.children.forEach(child => { if (child) child.parent = this; });
   }
 
-
   find(value) {
     const identifiedValue = this.identifier(value);
     const thisValue = this.identifier(this.value);
@@ -120,6 +117,7 @@ class Binarytree {
       }
     }
   }
+
   contains(value) {
     return this.find(value) !== undefined;
   }
@@ -145,9 +143,7 @@ class Binarytree {
       }
     }
   }
-
 }
-
 
 const BLACK = 'b';
 const RED = 'r';
@@ -174,14 +170,11 @@ class RedBlackTree extends Binarytree {
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
     this.color = replacement.parent.color;
-
     this.children.forEach(child => { if (child) child.parent = this; });
-
     this.children.forEach(child => {
       if (child)
         child.children.forEach(kid => { if (kid) kid.parent = child; });
     });
-
   }
   paintBlack() {
     this.color = BLACK;
@@ -195,9 +188,6 @@ class RedBlackTree extends Binarytree {
   get isRed() {
     return this.color === RED;
   }
-
-
-
   paint() {
     return this._insert1;
   }
@@ -208,8 +198,6 @@ class RedBlackTree extends Binarytree {
     } else {
       this._indert2();
     }
-
-
   }
 
   _insert2() {
@@ -230,7 +218,6 @@ class RedBlackTree extends Binarytree {
       return;
     } else
       this._insert4();
-
   }
   _insert4() {
     if (this.isRightChild && this.parent.isRightChild) {
@@ -277,7 +264,6 @@ class RedBlackTree extends Binarytree {
     }
   }
 }
-
 
 const rbt = new RedBlackTree();
 
