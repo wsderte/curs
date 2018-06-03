@@ -34,16 +34,16 @@ class Binarytree {
     return this.parent === undefined;
   }
   get  uncle() {
-    return this.grandparent ? (this.parent.isRightChild ?
-      this.grandparent.left :
-      this.grandparent.right) :
-      undefined;
+    return this.grandparent ? this.parent.isRightChild :
+      this.grandparent.left ?
+        this.grandparent.right :
+        undefined;
   }
   get siding() {
-    return this.parent ? (this.isRightChild ?
-      this.parent.left :
-      this.parent.right) :
-      undefined;
+    return this.parent ? this.isRightChild :
+      this.parent.left ?
+        this.parent.right :
+        undefined;
   }
   get grandparent() {
     return this.parent ? this.parent.parent : undefined;
@@ -58,6 +58,7 @@ class Binarytree {
   get hasTwoChildren() {
     return (this.right !== undefined && this.left !== undefined);
   }
+
 
   _swapWithParent() {
     const replacement = new Binarytree(this.value, this.identifier);
@@ -99,6 +100,7 @@ class Binarytree {
     this.children.forEach(child => { if (child) child.parent = this; });
   }
 
+
   find(value) {
     const identifiedValue = this.identifier(value);
     const thisValue = this.identifier(this.value);
@@ -117,7 +119,6 @@ class Binarytree {
       }
     }
   }
-
   contains(value) {
     return this.find(value) !== undefined;
   }
@@ -126,24 +127,25 @@ class Binarytree {
     if (this.value === undefined) {
       this.value = value;
       return this;
+    }
+    let dir;
+    if (this.identifier(value) > this.identifier(this.value)) {
+      dir = RIGHT;
     } else {
-      let dir;
-      if (this.identifier(value) > this.identifier(this.value)) {
-        dir = RIGHT;
-      } else {
-        dir = LEFT;
-      }
-      if (this.children[dir] === undefined) {
-        const newTree = new Binarytree(value, this.identifier);
-        newTree.parent = this;
-        this.children[dir] = newTree;
-        return newTree;
-      } else {
-        return this.children[dir].insert(value);
-      }
+      dir = LEFT;
+    }
+    if (this.children[dir] === undefined) {
+      const newTree = new Binarytree(value, this.identifier);
+      newTree.parent = this;
+      this.children[dir] = newTree;
+      return newTree;
+    } else {
+      return this.children[dir].insert(value);
     }
   }
+
 }
+
 
 const BLACK = 'b';
 const RED = 'r';
@@ -170,11 +172,14 @@ class RedBlackTree extends Binarytree {
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
     this.color = replacement.parent.color;
+
     this.children.forEach(child => { if (child) child.parent = this; });
+
     this.children.forEach(child => {
       if (child)
         child.children.forEach(kid => { if (kid) kid.parent = child; });
     });
+
   }
   paintBlack() {
     this.color = BLACK;
@@ -188,6 +193,9 @@ class RedBlackTree extends Binarytree {
   get isRed() {
     return this.color === RED;
   }
+
+
+
   paint() {
     return this._insert1;
   }
@@ -198,6 +206,8 @@ class RedBlackTree extends Binarytree {
     } else {
       this._indert2();
     }
+
+
   }
 
   _insert2() {
@@ -210,7 +220,7 @@ class RedBlackTree extends Binarytree {
 
   _insert3() {
     const uncle = this.uncle;
-    if (uncle ? uncle.isRed : false) {
+    if (uncle && uncle.isRed) {
       this.parent.paintBlack();
       uncle.paintBlack();
       this.grandparent.paintRed();
@@ -218,6 +228,7 @@ class RedBlackTree extends Binarytree {
       return;
     } else
       this._insert4();
+
   }
   _insert4() {
     if (this.isRightChild && this.parent.isRightChild) {
@@ -258,6 +269,7 @@ class RedBlackTree extends Binarytree {
     } else {
       const child = new RedBlackTree(value, this.identifier, RED);
       child.parent = this;
+
       this.children[dir] = child;
       child.paint();
       return child;
@@ -265,17 +277,18 @@ class RedBlackTree extends Binarytree {
   }
 }
 
+
 const rbt = new RedBlackTree();
 
 rbt.insert(7);
 rbt.insert(3);
 rbt.insert(2);
 rbt.insert(5);
-console.log('Before\n');
+console.log('Befor');
 console.log(rbt);
 console.log('\n');
 rbt.rotateRight();
-console.log('After\n');
+console.log('After');
 console.log(rbt);
 console.log('\nRight:\n ');
 console.log(rbt.right);
