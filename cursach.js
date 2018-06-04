@@ -34,16 +34,25 @@ class Binarytree {
     return this.parent === undefined;
   }
   get  uncle() {
-    return this.grandparent ? this.parent.isRightChild :
-      this.grandparent.left ?
-        this.grandparent.right :
-        undefined;
+    //return this.grandparent ? (this.parent.isRightChild ||
+    // this.grandparent.left || this.grandparent.right) :
+    //undefined;
+    if (!this.grandparent) {
+      return undefined;
+    }
+    return this.parent.isRightChild ?
+      this.grandparent.left : this.grandparent.right;
+
   }
   get siding() {
-    return this.parent ? this.isRightChild :
-      this.parent.left ?
-        this.parent.right :
-        undefined;
+    //return this.parent ? (this.isRightChild ||
+    //  this.parent.left ||
+    //    this.parent.right) :
+    //  undefined;
+    if (!this.parent) {
+      return undefined;
+    }
+    return this.isRightChild ? this.parent.left : this.parent.right;
   }
   get grandparent() {
     return this.parent ? this.parent.parent : undefined;
@@ -52,8 +61,8 @@ class Binarytree {
     return this.children.every(child => child === undefined);
   }
   get hasOneChild() {
-    return (this.right !== undefined && this.left === undefined) ||
-       (this.right === undefined && this.left !== undefined);
+    if (this.right !== undefined) return this.left === undefined;
+    return this.left !== undefined;
   }
   get hasTwoChildren() {
     return (this.right !== undefined && this.left !== undefined);
@@ -75,10 +84,9 @@ class Binarytree {
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
 
-    this.children.forEach(child => { if (child) child.parent = this; });
+    this.children.forEach(child => { child.parent = this; });
     this.children.forEach(child => {
-      if (child)
-        child.children.forEach(kid => { if (kid) kid.parent = child; });
+      child.children.forEach(kid => { kid.parent = child; });
     });
 
   }
@@ -96,8 +104,8 @@ class Binarytree {
     this.children[opposite] = pivot.children[dir];
     pivot.children[dir] = this;
     pivot.parent = this.parent;
-    pivot.children.forEach(child => { if (child) child.parent = pivot; });
-    this.children.forEach(child => { if (child) child.parent = this; });
+    pivot.children.forEach(child => { child.parent = pivot; });
+    this.children.forEach(child => { child.parent = this; });
   }
 
 
@@ -106,17 +114,12 @@ class Binarytree {
     const thisValue = this.identifier(this.value);
     if (thisValue === identifiedValue) {
       return this.value;
+    }
+    const dir = thisValue < identifiedValue ? RIGHT : LEFT;
+    if (this.children[dir] === undefined) {
+      return undefined;
     } else {
-      let dir;
-      if (thisValue < identifiedValue) {
-        dir = RIGHT;
-      } else {
-        dir = LEFT;
-      } if (this.children[dir] === undefined) {
-        return undefined;
-      } else {
-        return this.children[dir].find(value);
-      }
+      return this.children[dir].find(value);
     }
   }
   contains(value) {
@@ -128,12 +131,8 @@ class Binarytree {
       this.value = value;
       return this;
     }
-    let dir;
-    if (this.identifier(value) > this.identifier(this.value)) {
-      dir = RIGHT;
-    } else {
-      dir = LEFT;
-    }
+    const dir = this.identifier(value) >
+     this.identifier(this.value) ? RIGHT : LEFT;
     if (this.children[dir] === undefined) {
       const newTree = new Binarytree(value, this.identifier);
       newTree.parent = this;
@@ -173,11 +172,10 @@ class RedBlackTree extends Binarytree {
     this.parent = replacement.parent.parent;
     this.color = replacement.parent.color;
 
-    this.children.forEach(child => { if (child) child.parent = this; });
+    this.children.forEach(child => { child.parent = this; });
 
     this.children.forEach(child => {
-      if (child)
-        child.children.forEach(kid => { if (kid) kid.parent = child; });
+      child.children.forEach(kid => { if (kid) kid.parent = child; });
     });
 
   }
@@ -226,9 +224,9 @@ class RedBlackTree extends Binarytree {
       this.grandparent.paintRed();
       this.grandparent.paint();
       return;
-    } else
+    } else {
       this._insert4();
-
+    }
   }
   _insert4() {
     if (this.isRightChild && this.parent.isRightChild) {
@@ -258,12 +256,8 @@ class RedBlackTree extends Binarytree {
       this.paintBlack;
       return;
     }
-    let dir;
-    if (this.identifier(value) > this.identifier(this.value)) {
-      dir = RIGHT;
-    } else {
-      dir = LEFT;
-    }
+    const dir = this.identifier(value) >
+     this.identifier(this.value) ? RIGHT : LEFT;
     if (this.children[dir] !== undefined) {
       return this.children[dir].insert(value);
     } else {
@@ -284,11 +278,11 @@ rbt.insert(7);
 rbt.insert(3);
 rbt.insert(2);
 rbt.insert(5);
-console.log('Befor');
+console.log('Before\n');
 console.log(rbt);
 console.log('\n');
 rbt.rotateRight();
-console.log('After');
+console.log('After\n');
 console.log(rbt);
 console.log('\nRight:\n ');
 console.log(rbt.right);
