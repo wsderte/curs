@@ -34,9 +34,6 @@ class Binarytree {
     return this.parent === undefined;
   }
   get  uncle() {
-    //return this.grandparent ? (this.parent.isRightChild ||
-    // this.grandparent.left || this.grandparent.right) :
-    //undefined;
     if (!this.grandparent) {
       return undefined;
     }
@@ -45,10 +42,6 @@ class Binarytree {
 
   }
   get siding() {
-    //return this.parent ? (this.isRightChild ||
-    //  this.parent.left ||
-    //    this.parent.right) :
-    //  undefined;
     if (!this.parent) {
       return undefined;
     }
