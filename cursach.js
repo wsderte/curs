@@ -175,8 +175,6 @@ class RedBlackTree extends Binarytree {
     return this.color === RED;
   }
 
-
-
   paint() {
     return this._insert1;
   }
@@ -187,8 +185,6 @@ class RedBlackTree extends Binarytree {
     } else {
       this._indert2();
     }
-
-
   }
 
   _insert2() {
@@ -261,10 +257,8 @@ rbt.insert(3);
 rbt.insert(2);
 rbt.insert(5);
 console.log('Before\n');
-console.log(rbt);
+console.dir(rbt, { depth: null, colors: true });
 console.log('\n');
 rbt.rotateRight();
-console.log('After\n');
-console.log(rbt);
-console.log('\nRight:\n ');
-console.log(rbt.right);
+console.log('After rotate\n');
+console.dir(rbt, { depth: null, colors: true });
