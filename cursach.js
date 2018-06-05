@@ -39,7 +39,6 @@ class Binarytree {
     }
     return this.parent.isRightChild ?
       this.grandparent.left : this.grandparent.right;
-
   }
   get siding() {
     if (!this.parent) {
@@ -66,13 +65,8 @@ class Binarytree {
     const replacement = new Binarytree(this.value, this.identifier);
     replacement.parent = this.parent;
     replacement.children = this.children;
-    if (this.parent !== undefined) {
-      if (this.isRightChild) {
-        this.parent.right = replacement;
-      } else {
-        this.parent.left = replacement;
-      }
-    }
+    if (this.parent) (this.isRightChild) ?
+      this.parent.right = replacement : this.parent.left = replacement;
     this.value = replacement.parent.value;
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
@@ -153,13 +147,9 @@ class RedBlackTree extends Binarytree {
      new RedBlackTree(this.value, this.identifier, this.color);
     replacement.parent = this.parent;
     replacement.children = this.children;
-    if (this.parent !== undefined) {
-      if (this.isRightChild) {
-        this.parent.right = replacement;
-      } else {
-        this.parent.left = replacement;
-      }
-    }
+    if (this.parent) (this.isRightChild) ?
+      this.parent.right = replacement : this.parent.left = replacement;
+
     this.value = replacement.parent.value;
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
@@ -168,7 +158,7 @@ class RedBlackTree extends Binarytree {
     this.children.forEach(child => { child.parent = this; });
 
     this.children.forEach(child => {
-      child.children.forEach(kid => { if (kid) kid.parent = child; });
+      child.children.forEach(kid => {  kid.parent = child; });
     });
 
   }
@@ -256,7 +246,6 @@ class RedBlackTree extends Binarytree {
     } else {
       const child = new RedBlackTree(value, this.identifier, RED);
       child.parent = this;
-
       this.children[dir] = child;
       child.paint();
       return child;
