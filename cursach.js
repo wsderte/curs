@@ -70,12 +70,10 @@ class Binarytree {
     this.parent = replacement.parent.parent;
 
     for (const child of this.children) {
-      if (child)
         child.parent = this;
     }
     for (const child of this.children) {
       for (const kid of child.children) {
-        if (kid)
           kid.parent = child;
       }
 
