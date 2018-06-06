@@ -1,15 +1,13 @@
 'use strict';
 
-const identity =  i => i;
 const RIGHT = 1;
 const LEFT = 0;
 const oppDir = dir => (dir === RIGHT ? LEFT : RIGHT);
 
 class Binarytree {
-  constructor(value, identifier = identity) {
+  constructor(value) {
     this.value = value;
     this.children = [];
-    this.identifier = identifier;
     this.parent = undefined;
   }
   get right() {
@@ -61,8 +59,8 @@ class Binarytree {
   }
 
 
-  _swapWithParent() {
-    const replacement = new Binarytree(this.value, this.identifier);
+  swapWithParent() {
+    const replacement = new Binarytree(this.value);
     replacement.parent = this.parent;
     replacement.children = this.children;
     if (this.parent) (this.isRightChild) ?
@@ -71,19 +69,30 @@ class Binarytree {
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
 
-    this.children.forEach(child => { child.parent = this; });
-    this.children.forEach(child => {
-      child.children.forEach(kid => { kid.parent = child; });
-    });
+    for (const child of this.children) {
+      if (child)
+        child.parent = this;
+    }
+    for (const child of this.children) {
+      for (const kid of child.children) {
+        if (kid)
+          kid.parent = child;
+      }
 
+    }
   }
+  // this.children.forEach(child => { child.parent = this; });
+  // this.children.forEach(child => {
+  // child.children.forEach(kid => { kid.parent = child; });
+  // });
+  // }
   rotateRight() {
     this._rotate(RIGHT);
-    this._swapWithParent();
+    this.swapWithParent();
   }
   rotateLeft() {
     this._rotate(LEFT);
-    this._swapWithParent();
+    this.swapWithParent();
   }
   _rotate(dir) {
     const opposite = oppDir(dir);
@@ -97,8 +106,8 @@ class Binarytree {
 
 
   find(value) {
-    const identifiedValue = this.identifier(value);
-    const thisValue = this.identifier(this.value);
+    const identifiedValue = value;
+    const thisValue = this.value;
     if (thisValue === identifiedValue) {
       return this.value;
     }
@@ -118,10 +127,10 @@ class Binarytree {
       this.value = value;
       return this;
     }
-    const dir = this.identifier(value) >
-     this.identifier(this.value) ? RIGHT : LEFT;
+    const dir = value >
+     this.value ? RIGHT : LEFT;
     if (this.children[dir] === undefined) {
-      const newTree = new Binarytree(value, this.identifier);
+      const newTree = new Binarytree(value);
       newTree.parent = this;
       this.children[dir] = newTree;
       return newTree;
@@ -132,24 +141,22 @@ class Binarytree {
 
 }
 
-
 const BLACK = 'b';
 const RED = 'r';
 
 class RedBlackTree extends Binarytree {
-  constructor(value, identifier = identity, color = BLACK) {
-    super(value, identifier);
+  constructor(value, color = BLACK) {
+    super(value);
     this.color = color;
   }
 
-  _swapWithParent() {
+  swapWithParent() {
     const replacement =
-     new RedBlackTree(this.value, this.identifier, this.color);
+      new RedBlackTree(this.value, this.color);
     replacement.parent = this.parent;
     replacement.children = this.children;
     if (this.parent) (this.isRightChild) ?
       this.parent.right = replacement : this.parent.left = replacement;
-
     this.value = replacement.parent.value;
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
@@ -235,12 +242,12 @@ class RedBlackTree extends Binarytree {
       this.paintBlack;
       return;
     }
-    const dir = this.identifier(value) >
-     this.identifier(this.value) ? RIGHT : LEFT;
+    const dir = value >
+     this.value ? RIGHT : LEFT;
     if (this.children[dir] !== undefined) {
       return this.children[dir].insert(value);
     } else {
-      const child = new RedBlackTree(value, this.identifier, RED);
+      const child = new RedBlackTree(value, RED);
       child.parent = this;
       this.children[dir] = child;
       child.paint();
@@ -251,7 +258,6 @@ class RedBlackTree extends Binarytree {
 
 
 const rbt = new RedBlackTree();
-
 rbt.insert(7);
 rbt.insert(3);
 rbt.insert(2);
