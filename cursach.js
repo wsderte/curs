@@ -69,21 +69,12 @@ class Binarytree {
     this.children = replacement.parent.children;
     this.parent = replacement.parent.parent;
 
-    for (const child of this.children) {
-        child.parent = this;
-    }
-    for (const child of this.children) {
-      for (const kid of child.children) {
-          kid.parent = child;
-      }
-
-    }
+    this.children.forEach(child => { child.parent = this; });
+    this.children.forEach(child => {
+      child.children.forEach(kid => { kid.parent = child; });
+    });
   }
-  // this.children.forEach(child => { child.parent = this; });
-  // this.children.forEach(child => {
-  // child.children.forEach(kid => { kid.parent = child; });
-  // });
-  // }
+
   rotateRight() {
     this._rotate(RIGHT);
     this.swapWithParent();
